@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Generate the Robu-only BOM CSV from the KiCad BOM + live Robu lookups."""
+"""Generate the Robu-only BOM CSV from the KiCad BOM + live Robu lookups.
+
+Source: sounddrill31 gist bom2.csv (revision with BMI270 IMU), retrieved 2026-10-08.
+"""
 import csv, os
 
 DATE = "2026-10-08"
 OUT = os.path.dirname(os.path.abspath(__file__))
-
 R = "https://robu-prod-media.s3.ap-south-1.amazonaws.com/uploads"
 
 # Reference, Qty, Value, Package, Robu product, SKU, MPN, unit price, availability,
@@ -24,19 +26,10 @@ rows = [
   "GRM1555C1H220JA01D Murata 22pF 50V C0G 5% 0402","R137672","GRM1555C1H220JA01D","0.68","In Stock","Not published",
   "exact","https://robu.in/product/grm1555c1h220ja01d-murata-cap-ceramic-22pf-50v-c0g-5-pad-smd-0402-125c-t-r/","",
   f"{R}/2024/06/C76960.pdf"],
- ["C2",1,"100u","0603 MLCC",
-  "CL21A107MQYNNWE Samsung 100uF 6.3V X5R 0805","R172120","CL21A107MQYNNWE","32.00","In Stock","Not published",
-  "nearest-not-exact","https://robu.in/product/cl21a107mqynnwe-samsang-6-3v-100uf-x5r-%c2%b120-0805-multilayer-ceramic-capacitors-mlcc-smd-smt-rohs/",
-  "No 100uF part exists in 0603. Nearest is 0805; footprint must change.",
-  f"{R}/2024/09/C6882730.pdf"],
- ["C4",1,"10n","0603 MLCC",
-  "10nF 0603 Surface Mount MLCC (pack of 50)","594976","N/A","0.72","In Stock","Not published",
-  "exact","https://robu.in/product/10nf-0603-surface-mount-multilayer-ceramic-capacitor-pack-of-50/",
-  "Generic 10nF 0603 pack, so no brand datasheet. Branded 10nF 0603s (R183944, R183959, R183991) are currently Out of Stock.",
-  ""],
- ["C5,C10,C11,C12,C14,C15",6,"100n","0603 MLCC",
+ ["C2,C4,C5,C10,C11,C12,C14,C15",8,"100n","0603 MLCC",
   "GRM188R71H104KA93D Murata 100nF 50V X7R 0603","R207385","GRM188R71H104KA93D","1.88","In Stock","Not published",
-  "exact","https://robu.in/product/grm188r71h104ka93d-murata-electronics-50v-100nf-x7r-%c2%b110-0603-multilayer-ceramic-capacitors-mlcc-smd-smt-rohs/","",
+  "exact","https://robu.in/product/grm188r71h104ka93d-murata-electronics-50v-100nf-x7r-%c2%b110-0603-multilayer-ceramic-capacitors-mlcc-smd-smt-rohs/",
+  "Revision merged the old 100u/0603 and 10n/0603 lines into eight 100nF; this covers all eight.",
   f"{R}/2025/02/C77055.pdf"],
  ["C1",1,"4.7u","0805 MLCC",
   "0805X475K500NT-FH 4.7uF 50V X5R 0805","R136796","0805X475K500NT-FH","1.89","In Stock","Not published",
@@ -66,6 +59,11 @@ rows = [
   "nearest-not-exact","https://robu.in/product/type-c-31-m-12-hroparts-5a-1-16p-female-type-c-smd-usb-connectors-rohs/",
   "Exact JAE DX07S016JA1R1500 not stocked. 16P SMD USB-C; verify pad layout vs the 14P footprint. Original BOM ref: usb.org USB Type-C spec zip.",
   f"{R}/2025/08/C165948.pdf"],
+ ["J7,J8",2,"Conn_01x01_Socket","SolderWirePad 1x01 SMD 1x2mm",
+  "","","","","n/a","n/a",
+  "no-component","",
+  "Bare exposed SMD solder pad on the PCB for soldering a wire to; it is board copper, not a part you buy. Nothing to source on Robu.",
+  ""],
  ["Y2",1,"Crystal_GND24 (8MHz)","Crystal 3225 4-pin",
   "X32258MOB4SI YXC 8MHz 12pF SMD3225-4P","R233569","X32258MOB4SI","26.00","In Stock","Not published",
   "exact","https://robu.in/product/x32258mob4si-yxc-crystal-oscillators-8mhz-surface-mount-crystal-12pf-%c2%b110ppm-%c2%b120ppm-smd3225-4p-crystals-rohs/",
@@ -103,11 +101,6 @@ rows = [
   "exact","https://robu.in/product/rc0603jr-0710kp-yageo-100mw-thick-film-resistors-%c2%b15-%c2%b1150ppm-%e2%84%83-10k%cf%89-0603-chip-resistor-surface-mount-rohs/",
   "FRC0603F1002TS R204890 is OOS; this is in stock.",
   f"{R}/2025/07/2506161050_YAGEO-RC0402FR-07220RP_C7038454.pdf"],
- ["U2",1,"ICM-42688-P","LGA-14",
-  "TDK InvenSense ICM-42688-P 6-axis IMU","R184326","ICM-42688-P","2139.00","Out of Stock","Not published",
-  "exact-but-oos","https://robu.in/product/icm-42688-p-tdk-invensense/",
-  "Exact part listed but currently Out of Stock; no ETA published. Module 601N1-ICM42688 R243090 (Rs669) is in stock but is not the bare IC.",
-  "https://invensense.tdk.com/download-resource/ds-000347-icm-42688-p-datasheet"],
  ["U1",1,"STM32F411CEU6","UFQFPN-48",
   "STM32F411CEU6TR ST UFQFPN-48","R233574","STM32F411CEU6TR","850.00","In Stock","Not published",
   "exact","https://robu.in/product/stm32f411ceu6tr-stmicroelectronics-arm-m4-100mhz-ufqfpn-487x7-microcontrollers-mcu-mpu-soc-rohs/",
@@ -122,6 +115,11 @@ rows = [
   "alt-manufacturer","https://robu.in/product/usblc6-2sc6-ms-msksemi-4-5a-15v-150w-6v-5v-sot-23-6-esd-and-surge-protection-tvs-esd-rohs/",
   "Exact part number in stock from MSKSEMI. ST original USBLC6-2SC6 R191248 is Out of Stock.",
   f"{R}/2025/08/C3029034.pdf"],
+ ["U6",1,"BMI270","LGA-14 (XDCR_BMI270)",
+  "BOSCH BMI270 6-Axis IMU Motion Sensor LGA-14","R155006","BMI270","599.00","Out of Stock","Not published",
+  "exact-but-oos","https://robu.in/product/bosch-bmi270motion-sensoric22-g-4-g-8-g-16-g/",
+  "Exact Bosch BMI270 listed but currently Out of Stock; no ETA published. Only bare BMI270 on Robu. Sensor breakout modules exist but are not the IC.",
+  "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf"],
 ]
 
 header = ["Reference","Qty","Value","Package","Robu_Product","Robu_SKU","MPN",
@@ -132,13 +130,14 @@ with open(f"{OUT}/bom-robu.csv","w",newline="") as f:
     w.writerow(header)
     w.writerows(rows)
 
-nf = [r for r in rows if r[10] in ("nearest-not-exact","not-found")]
+nf = [r for r in rows if r[10] in ("nearest-not-exact","not-found","no-component")]
 with open(f"{OUT}/not-found-exact.csv","w",newline="") as f:
     w = csv.writer(f)
-    w.writerow(["Reference","Qty","Value","Package","Why_not_exact","Nearest_on_Robu","Nearest_URL","BOM_datasheet"])
+    w.writerow(["Reference","Qty","Value","Package","Why_not_exact","Nearest_on_Robu","Nearest_URL","Datasheet"])
     w.writerows([[r[0],r[1],r[2],r[3],r[12],r[4],r[11],r[13]] for r in nf])
 
 cost = sum(r[1] * float(r[7]) for r in rows if r[8] == "In Stock")
+print("lines:", len(rows))
 print("in-stock (price*qty) subtotal: Rs %.2f" % cost)
-print("rows:", len(rows), "not-found/no-exact:", len(nf),
-      "rows-with-datasheet:", sum(1 for r in rows if r[13]))
+print("not-found/no-exact/no-component:", len(nf),
+      "| rows-with-datasheet:", sum(1 for r in rows if r[13]))
